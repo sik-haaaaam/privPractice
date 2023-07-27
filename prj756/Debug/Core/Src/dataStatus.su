@@ -1,0 +1,3 @@
+../Core/Src/dataStatus.c:9:6:initDataStatus	8	static
+../Core/Src/dataStatus.c:16:6:setEventData	16	static
+../Core/Src/dataStatus.c:22:10:getEventData	16	static

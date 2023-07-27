@@ -12,23 +12,20 @@ void initDataStatus()
 	mEVENTDataCnt = 0;
 }
 
-// val:input, mEventData:output
+
 void setEventData(EVENT_ID val)
 {
 	mEventData[mEVENTDataCnt++] = val;
+	// val:input, mEventData:output
 }
 
 EVENT_ID getEventData()
 {
 	EVENT_ID returnVal = EVENT_NULL; //초기화(init), val : local 변수
 	returnVal = mEventData[0];
-	memcpy(mEventData[0], mEventData[1], sizeof(EVENT_ID)*255); // 첫번째꺼 썼으니까 두번째부터 마지막까지 한칸 앞으로 이동
+	memcpy(&mEventData[0], &mEventData[1], sizeof(EVENT_ID)*255); // 첫번째꺼 썼으니까 두번째부터 마지막까지 한칸 앞으로 이동
 
 	mEventData[255] = EVENT_NULL;
 	mEVENTDataCnt--;
 	return returnVal;
-
-void initDataStatus()
-{
-
 }
