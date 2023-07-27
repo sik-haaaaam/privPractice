@@ -87,9 +87,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 
 
-	if(htim->Instance == htim5.Instance){
-		HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
-	}
+//	if(htim->Instance == htim5.Instance){
+//		HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
+//	}
 
 	ClockFlag ^= 0x01;
 }
@@ -140,10 +140,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState)
+	  //Blue Swith -> LED
+	  HAL_GPIO_WritePin(GPIOB, LD3_Pin, HAL_GPIO_ReadPin(GPIOC, B1_Pin));
 
+	  //깜빡이는 시간 점점 줄어드는 toggle
 	  HAL_GPIO_TogglePin(GPIOB, LD2_Pin);
 	  HAL_Delay(f);
+
+
 
 	  Flag++;
 
@@ -428,6 +432,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin|LD2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : B1_Pin */
+  GPIO_InitStruct.Pin = B1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LD1_Pin LD3_Pin LD2_Pin */
   GPIO_InitStruct.Pin = LD1_Pin|LD3_Pin|LD2_Pin;
