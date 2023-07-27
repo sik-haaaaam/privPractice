@@ -1,4 +1,5 @@
 #include "dataStatus.h"
+<<<<<<< HEAD
 #include "string.h"
 
 
@@ -27,4 +28,10 @@ EVENT_ID getEventData()
 	mEventData[255] = EVENT_NULL;
 	mEventDataCnt--;
 	return returnVal;
+=======
+
+void initDataStatus()
+{
+
+>>>>>>> ca186cf2a1434c7b84e07f79659d574897666919
 }

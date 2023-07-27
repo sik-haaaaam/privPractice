@@ -21,7 +21,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+<<<<<<< HEAD
 #include "dataStatus.h"
+=======
+
+>>>>>>> ca186cf2a1434c7b84e07f79659d574897666919
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -74,6 +78,7 @@ uint32_t testVal = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+<<<<<<< HEAD
 
 	setEventData(EVENT_100ms);
 
@@ -99,6 +104,26 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //	}
 //
 //	ClockFlag ^= 0x01;
+=======
+	testVal++;
+
+	d -= 500;
+	if(d == 0){
+		f -= 500;
+	    d = f;
+    }
+	if(f == 0 && d == 0){
+		f = 2500;
+		d = 2500;
+	}
+
+
+	if(htim->Instance == htim5.Instance){
+		HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
+	}
+
+	ClockFlag ^= 0x01;
+>>>>>>> ca186cf2a1434c7b84e07f79659d574897666919
 }
 /* USER CODE END 0 */
 
@@ -136,7 +161,10 @@ int main(void)
   MX_UART5_Init();
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
+<<<<<<< HEAD
   initDataStatus();
+=======
+>>>>>>> ca186cf2a1434c7b84e07f79659d574897666919
   HAL_TIM_Base_Start_IT(&htim5);
 
   /* USER CODE END 2 */
@@ -150,6 +178,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  //HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState)
 
+<<<<<<< HEAD
 //	  HAL_GPIO_TogglePin(GPIOB, LD2_Pin);
 //	  HAL_Delay(f);
 //
@@ -177,6 +206,12 @@ int main(void)
 
 
 
+=======
+	  HAL_GPIO_TogglePin(GPIOB, LD2_Pin);
+	  HAL_Delay(f);
+
+	  Flag++;
+>>>>>>> ca186cf2a1434c7b84e07f79659d574897666919
 
 
 //	  HAL_GPIO_WritePin(GPIOB, LD1_Pin, GPIO_PIN_SET);
@@ -460,12 +495,15 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin|LD2_Pin, GPIO_PIN_RESET);
 
+<<<<<<< HEAD
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
+=======
+>>>>>>> ca186cf2a1434c7b84e07f79659d574897666919
   /*Configure GPIO pins : LD1_Pin LD3_Pin LD2_Pin */
   GPIO_InitStruct.Pin = LD1_Pin|LD3_Pin|LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
