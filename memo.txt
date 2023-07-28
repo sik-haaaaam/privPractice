@@ -1,0 +1,108 @@
+한번에 64비트 연산
+HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin));
+byte - 8비트	2 or 4개 -> int
+bit = 0 or 1
+
+통신 2byte 이내
+
+hex 16진수 : 0~f
+
+float or int or double
+
+
+byte
+unsigned char, u(nsigned)int8_t, 0~255, 0xff
+
+signed
+0000 0000 양수
+1000 0000 음수
+
+unsigned 양수
+
+
+arm 임베디드
+amd 범용
+
+보드 arm
+
+
+System Core - SYS - Debug : Serial Wire
+RCC - Crystal 온도에 민감?! 시간 변할지두,, 통신, 시간 크리스탈 각각. 에러율 정확
+Clock Configuration - HCLK - 100MHz
+
+GPIO 입출력 담당 핀
+
+
+USER CODE BEGIN Includes 와 USER CODE END Includes 사이에 넣어야
+
+
+HAL Hardware 동작시키는 드라이버
+
+
+네이밍 협업 데이터 흐름
+
+
+함수 - 동작을 가능케 해주는 패키지
+
+전압 0~5V -> 0~255
+
+
+.h header 선언	목차. 내용xx
+
+.c source 코딩, 기능구현
+
+
+
+DMA 계속 알아서 들어오는
+Interrupt
+Read
+
+
+Analog - ADC3 - IN9 - DMA Setting - Add - ADC3
+					    NVIC Setting
+
+Parameter
+Continuous Conversion Mode -> Enabled
+DMA Continuous Request -> Enabled
+
+
+Rank - Sampling Time - data 3번 받고 맘에 드는거 하나 주께를 56cycles로
+
+
+event (flag)
+
+
+timer interrupt
+5초 설정 - 5초 뒤 interrupt 발생
+
+
+54MHz/Prescaler/CounterPeriod
+
+54000000/539/999 -> 초당100번
+
+
+led 0.5 ~ 5
+
+
+
+
+1bit
+1byte = 8bit
+0~255
+
+그룹 enum
+
+
+
+변수의 타입 3가지
+local : 함수 내의 변수
+global : 프로젝트 내의 변수
+member : C파일 내부의 변수
+
+
+stack - LIFO - 후입선출
+queue - FIFO - 선입선출
+
+
+
+UART 로 5초마다 10 들어오면 LD2 토글
