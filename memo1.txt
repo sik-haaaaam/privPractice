@@ -1,0 +1,25 @@
+2번 Transmit
+5번 Receive
+
+
+HAL_UART_Transmit(&huart2, &txData, 1, 10);
+HAL_UART_Receive(&huart5, &rxData, 1, 10);
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	HAL_UART_Receive_IT(&huart5, &rxData, 1);
+
+}
+
+
+RxCpltCallback
+수신 버퍼의 데이터를 다른 버퍼에 저장
+수신 버퍼 - 데이터 수신시에만 사용하는 버퍼
+
+UART 통신 수신 인터럽트 설정 함수를 다시 한번 호출
+
+
+
+HAL_UART_Transmit(&huart2, &txData, 1, 100);
+
+HAL_UART_Receive(&huart2, &rxData, 1, 10);
