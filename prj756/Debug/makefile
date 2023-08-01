@@ -60,8 +60,8 @@ all: main-build
 main-build: prj756.elf secondary-outputs
 
 # Tool invocations
-prj756.elf prj756.map: $(OBJS) $(USER_OBJS) C:\Users\user\Desktop\S\yas\embedded\prj756\prj756\STM32F756ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "prj756.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\user\Desktop\S\yas\embedded\prj756\prj756\STM32F756ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="prj756.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+prj756.elf prj756.map: $(OBJS) $(USER_OBJS) C:\Users\wadeh\work\yas\embedded\prj756\prj756\STM32F756ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "prj756.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\wadeh\work\yas\embedded\prj756\prj756\STM32F756ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="prj756.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

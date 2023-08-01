@@ -106,3 +106,23 @@ queue - FIFO - 선입선출
 
 
 UART 로 5초마다 10 들어오면 LD2 토글
+
+
+실시간 real time 같은 주기
+
+
+
+
+analog 전압 0~5V
+
+
+
+CAN GND 안물림, 노이즈에 강함, 
+
+
+
+
+
+
+EVENT_UART_RX, TX
+

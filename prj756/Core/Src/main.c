@@ -37,12 +37,13 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-uint8_t txData = 0;
-uint8_t rxData = 0;
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc3;
+DMA_HandleTypeDef hdma_adc1;
 DMA_HandleTypeDef hdma_adc3;
 
 TIM_HandleTypeDef htim5;
@@ -51,11 +52,9 @@ UART_HandleTypeDef huart5;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
+uint32_t adcVal = 0;
 
-    HAL_UART_Receive_IT(&huart5, &rxData, 1);
-}
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,11 +65,10 @@ static void MX_USART2_UART_Init(void);
 static void MX_ADC3_Init(void);
 static void MX_UART5_Init(void);
 static void MX_TIM5_Init(void);
+static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
-int ClockFlag = 0;
-int Flag = 0;
-int d = 2500;
-int f = 2500;
+
+
 
 /* USER CODE END PFP */
 
@@ -79,30 +77,22 @@ int f = 2500;
 
 
 
-//uint32_t testVal = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 
 	setEventData(EVENT_100ms);
-//	testVal++;
-//
-//	d -= 500;
-//	if(d == 0){
-//		f -= 500;
-//	    d = f;
-//    }
-//	if(f == 0 && d == 0){
-//		f = 2500;
-//		d = 2500;
-//	}
-
 
 //	if(htim->Instance == htim5.Instance){
 //		HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
 //	}
-//
-//	ClockFlag ^= 0x01;
+
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+
+    HAL_UART_Receive_IT(&huart5, &rxData, 1);
 }
 /* USER CODE END 0 */
 
@@ -139,16 +129,19 @@ int main(void)
   MX_ADC3_Init();
   MX_UART5_Init();
   MX_TIM5_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   initDataStatus();
   HAL_TIM_Base_Start_IT(&htim5);
 
   HAL_UART_Receive_IT(&huart5, &rxData, 1);
 
+  HAL_ADC_Start_DMA(&hadc1, &adcVal, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  int sendVal = 0;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -159,12 +152,6 @@ int main(void)
 
 
 
-//	  HAL_GPIO_TogglePin(GPIOB, LD2_Pin);
-//	  HAL_Delay(f);
-//
-//	  Flag++;
-
-//	  HAL_GPIO_WritePin(GPIOB, LD2_Pin, HAL_GPIO_ReadPin(GPIOC, B1_Pin));
 
 
 //	  if(getEventData() == EVENT_100ms)
@@ -176,38 +163,26 @@ int main(void)
 	  {
 	  case EVENT_100ms:
 		  HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
+		  txData[0]++;
+		  HAL_UART_Transmit(&huart2, &txData[0], 1, 10);
 		  break;
 	  case EVENT_1s:
-		  HAL_GPIO_TogglePin(GPIOB, LD2_Pin);
+		  txData[1]++;
+		  txData[1] %= 5;
+		  sendVal = txData[1] + 6;
+		  HAL_UART_Transmit(&huart5, &txData[1], 1, 10);
 		  break;
+	  case EVENT_UART2_RX:
+	  if(getUartData(eUart2) == 0x10)
+		  HAL_GPIO_TogglePin(GPIOB, LD2_Pin);
+	  break;
+	  case EVENT_UART5_RX:
+	  break;
 	  default:
 		  break;
 	  }
 
 
-//	  HAL_GPIO_WritePin(GPIOB, LD1_Pin, GPIO_PIN_SET);
-//	  HAL_GPIO_WritePin(GPIOB, LD2_Pin|LD3_Pin, GPIO_PIN_RESET);
-//	  HAL_Delay(1000);
-//	  HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
-//	  HAL_GPIO_WritePin(GPIOB, LD2_Pin, GPIO_PIN_SET);
-//	  HAL_GPIO_WritePin(GPIOB, LD3_Pin, GPIO_PIN_RESET);
-//	  HAL_Delay(1000);
-//	  HAL_GPIO_WritePin(GPIOB, LD3_Pin, GPIO_PIN_SET);
-//	  HAL_GPIO_WritePin(GPIOB, LD2_Pin, GPIO_PIN_RESET);
-//	  HAL_Delay(1000);
-
-
-//	  txData++;
-//	  txData2++;
-
-	  HAL_UART_Transmit(&huart2, &txData, 1, 100);
-	  HAL_Delay(1000);
-	  HAL_UART_Receive(&huart5, &rxData, 1, 100);
-	  if(rxData == 10)
-	  {
-		  HAL_UART_Transmit(&huart2, "0\r\n", sizeof("0\r\n"), 100);
-		  rxData = 0;
-	  }
   }
   /* USER CODE END 3 */
 }
@@ -267,6 +242,58 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC1_Init(void)
+{
+
+  /* USER CODE BEGIN ADC1_Init 0 */
+
+  /* USER CODE END ADC1_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC1_Init 1 */
+
+  /* USER CODE END ADC1_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
 }
 
 /**
@@ -452,6 +479,9 @@ static void MX_DMA_Init(void)
   /* DMA2_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+  /* DMA2_Stream4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream4_IRQn);
 
 }
 
