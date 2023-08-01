@@ -62,9 +62,9 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
-static void MX_ADC3_Init(void);
 static void MX_UART5_Init(void);
 static void MX_TIM5_Init(void);
+static void MX_ADC3_Init(void);
 static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -75,24 +75,38 @@ static void MX_ADC1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
+int TickFor1S = 0;
 
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 
 	setEventData(EVENT_100ms);
-
-//	if(htim->Instance == htim5.Instance){
-//		HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
-//	}
-
+	if(TickFor1S == 10)
+	{
+		setEventData(EVENT_1s);
+		TickFor1S = 0;
+	}
+	TickFor1S++;
 }
+
+uint8_t txData[2] = {0, };
+uint8_t rxData[2] = {0, };
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-
-    HAL_UART_Receive_IT(&huart5, &rxData, 1);
+	if(huart->Instance == USART2)
+	{
+		HAL_UART_Receive_IT(&huart2, &rxData[0], 1);
+		setUartData(eUart2, rxData[0]);
+		setEventData(EVENT_UART2_RX);
+	}
+	else if(huart->Instance == UART5)
+	{
+		HAL_UART_Receive_IT(&huart5, &rxData[1], 1);
+		setEventData(EVENT_UART5_RX);
+	}
 }
 /* USER CODE END 0 */
 
@@ -149,9 +163,6 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  //Blue Swith -> LED
 //	  HAL_GPIO_WritePin(GPIOB, LD3_Pin, HAL_GPIO_ReadPin(GPIOC, B1_Pin));
-
-
-
 
 
 //	  if(getEventData() == EVENT_100ms)
